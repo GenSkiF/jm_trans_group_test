@@ -1,0 +1,178 @@
+/* LEFT MENU — compact styles (fixed width, dark theme) */
+
+.left-menu {
+  /* размеры */
+  width: 230px;
+  min-width: 230px;
+
+  /* размещение — тянем на всю высоту, от самого верха */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 20; /* ниже шапки, но поверх центра */
+
+  /* визуал как был */
+  background: #82b8f2;
+  color: #797979;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+
+.left-menu-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.left-menu-header .brand-mini {
+  font-weight: 700;
+  letter-spacing: .5px;
+  font-size: 14px;
+  opacity: .9;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width:100%;
+}
+
+.sidenav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 6px 12px 6px;
+  min-height: 0;
+}
+
+.left-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  width: calc(100% - 12px);
+  margin-left: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease;
+  border: none;
+  outline: none;
+}
+
+.left-menu-item:hover { background: rgba(255,255,255,.08); }
+.left-menu-item.is-active {
+  background: #ffffff;
+  color: #0f2843;
+  font-weight: 600;
+}
+
+.left-menu-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink: 0;
+}
+
+.left-menu-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* bottom dock (sticks to bottom) */
+.left-menu-bottom {
+  margin-top: auto;
+  padding-bottom: 10px;
+}
+
+/* small separator */
+.left-menu-sep {
+  height: 1px;
+  margin: 8px 12px;
+  background: rgba(255,255,255,.15);
+  border-radius: 1px;
+}
+
+/* === Collapsible behavior === */
+.left-menu {
+  transition: width .2s ease, min-width .2s ease;
+}
+
+/* Кнопка переключателя в шапке */
+.collapse-toggle {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,.25);
+  color: #0f2843;            /* под цвет иконок/текста */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s ease, opacity .15s ease;
+}
+.collapse-toggle:hover { background: rgba(255,255,255,.35); }
+
+/* Когда меню свернуто — уменьшаем ширину, прячем текст */
+.left-menu.collapsed {
+  width: 64px;
+  min-width: 64px;
+}
+/* бренд оставляем видимым и компактным в узком режиме */
+.left-menu-header .brand-mini { cursor: pointer; }
+
+.left-menu.collapsed .brand-mini {
+  opacity: 1;
+  pointer-events: auto;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+.left-menu.collapsed .left-menu-text {
+  display: none;
+}
+
+/* Выравниваем элементы при узкой ширине */
+.left-menu.collapsed .left-menu-item {
+  justify-content: center;
+  gap: 0;
+  padding: 10px 8px;
+  width: calc(100% - 16px);
+  margin-left: 8px;
+}
+.left-menu.collapsed .left-menu-icon {
+  width: 22px;
+  height: 22px;
+}
+
+/* Вращаем шеврон (указывает направление разворота) */
+.left-menu.collapsed .collapse-toggle svg {
+  transform: rotate(180deg);
+}
+
+/* Небольшой визуальный акцент для активного пункта в узком режиме */
+.left-menu.collapsed .left-menu-item.is-active {
+  background: rgba(255,255,255,.92);
+}
+

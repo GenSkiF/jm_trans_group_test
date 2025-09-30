@@ -1,0 +1,29 @@
+Eng -- Ka -- Ru
+
+Auth
+
+Enter to JM Trans Group -- JM Trans Group შესვლა -- Вход в JM Trans Group
+Login -- მომხმარებელი -- Логин
+Password -- პაროლი --Пароль
+Repeat password -- პაროლის გამეორება -- Повторите пароль
+Name -- სახელი -- Имя
+Surname -- გვარი -- Фамилия
+Phone -- ტელეფონი -- Телефон
+Email -- ელ. ფოსტა -- Эл. почта
+Verification code -- დამადასტურებელი კოდი -- Проверочный код
+Enter -- შესვლა -- Вход
+Register -- რეგისტრაცია -- Регистрация
+Forgot password? -- დაგავიწყდათ პაროლი? -- Забыли пароль?
+Get code -- კოდის მიღება -- Получить код
+
+
+App-root
+
+Add -- დამატება -- Добавить
+Search -- ძებნა -- Поиск
+Announcements -- განცხადებები -- Объявления
+Transport -- ტრანსპორტი -- Транспорт
+Logistics -- ლოჯისტიკა -- Логистика
+Accounting -- ბუღალტერია -- Бухгалтерия
+
+

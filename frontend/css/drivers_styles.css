@@ -1,0 +1,28 @@
+/* drivers_styles.css */
+
+#drivers-menu {
+  box-shadow: 0 3px 16px #0003;
+  min-width: 130px;
+  border-radius: 8px;
+  padding: 0.2em 0.3em;
+}
+#drivers-menu button {
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 5px !important;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  text-align: left;
+}
+.drivers-title {
+  font-weight: 600;
+  cursor: pointer;
+}
+.drivers-scroll {
+  max-height: 150px;
+  overflow-y: auto;
+  background: #1eacf3;
+  border-radius: 7px;
+  padding: 6px 4px;
+  margin-bottom: 5px;
+}

@@ -1,0 +1,708 @@
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>JM Trans Group</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.7.0/css/flag-icons.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/statistics_styles.css">
+  <link rel="stylesheet" href="css/drivers_styles.css">
+  <link rel="stylesheet" href="css/left_menu.css">
+  <!-- Мобильные переопределения -->
+  <link rel="stylesheet" href="css/mobile.css">
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>  
+  <!-- Авторизация --> 
+  <div class="auth-container" id="auth-block">
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="assets/jmtglogo.png" alt="JM Trans Group Logo" class="auth-logo">
+        <div id="auth-title" class="mt-2 h5">Enter to JM Trans Group</div>
+      </div>
+      <form class="auth-form" id="auth-form">
+        <div class="form-group">
+          <label for="username"></label>
+          <input type="text" id="username" placeholder="Login" required>
+        </div>
+        <div class="form-group">
+          <label for="password"></label>
+          <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <div id="register-fields" style="display:none;">
+          <div class="form-group">
+            <label for="password2"></label>
+            <input type="password" id="password2" placeholder="Repeat password">
+            <label for="name"></label>
+            <input type="text" id="name" placeholder="name">
+            <label for="surname"></label>
+            <input type="text" id="surname" placeholder="surname">
+            <label for="phone"></label>
+            <input type="text" id="phone" placeholder="phone">
+            <label for="email"></label>
+            <input type="email" id="email" placeholder="Email">
+            <label for="code"></label>
+            <input type="text" id="code" placeholder="Verification code">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">Enter</button>
+          <button type="button" class="btn btn-secondary" id="show-register">Register</button>
+        </div>
+        <div class="form-footer">
+          <button type="button" class="btn-link" id="forgot-password">Forgot password?</button>
+          <button type="button" class="btn-link" id="get-code">Get code</button>
+        </div>
+        <div id="auth-error" style="display:none;"></div>
+        <div id="auth-success" style="display:none;"></div>
+      </form>
+    </div>
+  </div> 
+   
+
+  <!-- Главная панель сайта <Главный layout> -->
+  <div id="main-section" style="display:none;">
+    <div class="app-root">
+      <!-- Верхняя синяя панель -->
+      <header class="mainbar-layout">
+        <div class="mainbar">
+          <button class="plus-btn" id="plus-btn" title="Add">＋</button>
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="search-input" placeholder="Search" oninput="onGlobalSearch()">
+            <div id="autocomplete-list" class="autocomplete-list"></div>
+          </div>
+          <button class="mainbar-btn" onclick="showSection('maps')" id="btn-maps" title="Карта">🗺</button>
+          <span class="mainbar-right">
+            <span id="connection-status" class="connection-dot bg-danger"></span>
+            <button class="round-btn" style="background:#ffae42;" title="Выйти" onclick="logout()">🔒</button>
+          </span>
+        </div>
+      </header>
+
+      <!-- Центральный горизонтальный контейнер: ЛЕВАЯ — ЦЕНТР — ПРАВАЯ -->
+      <div class="main-horizontal">
+        <!-- Левая панель  Главное меню -->
+        <aside id="MainMenu" class="left-menu">
+          <!-- маленькая шапка над кнопками — сюда позже можно поставить логотип/название -->
+          <div class="left-menu-header">
+            <!-- Кнопка свернуть/развернуть -->
+            <button class="collapse-toggle" id="leftmenu-toggle"
+                    aria-label="Свернуть меню"
+                    aria-expanded="true"
+                    title="Свернуть/Развернуть">
+              <!-- Шеврон (поворачиваем в CSS при сворачивании) -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14.5 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Кликабельный бренд: полное и короткое имя -->
+            <div class="brand-mini"
+                id="brand-mini"
+                data-full="JM TRANS GROUP"
+                data-short="JMTG">JM TRANS GROUP</div>
+          </div>
+
+          <!-- верхний блок кнопок -->
+          <nav class="sidenav">
+            <button class="left-menu-item" data-section="announcements" title="announcements"
+                    onclick="showSection('announcements')" action="btn-announcements">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Мегафон -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 10v4a2 2 0 0 0 2 2h1l3 4h2l-1.5-4H17a4 4 0 0 0 4-4V8a4 4 0 0 1-4 4H8V8H5a2 2 0 0 0-2 2Z" fill="currentColor"/>
+                  <path d="M20 4v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Announcements</span>
+            </button>
+
+            <button class="left-menu-item" data-section="transport" title="transport"
+                    onclick="showSection('transport')" action="btn-transport">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Грузовик -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="7" width="11" height="6" rx="1.5" fill="currentColor"/>
+                  <path d="M13 9h5l3 3v2h-8V9Z" fill="currentColor"/>
+                  <circle cx="7" cy="17" r="2" fill="currentColor"/>
+                  <circle cx="18" cy="17" r="2" fill="currentColor"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Transport</span>
+            </button>
+
+            <button class="left-menu-item" data-section="logistics" title="logistics"
+                    onclick="showSection('logistics')" action="btn-logistics">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Ящики -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="5" width="8" height="6" rx="1.2" fill="currentColor"/>
+                  <rect x="13" y="5" width="8" height="6" rx="1.2" fill="currentColor"/>
+                  <rect x="8" y="13" width="8" height="6" rx="1.2" fill="currentColor"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Logistics</span>
+            </button>
+
+            <button class="left-menu-item" data-section="accounting" title="accounting"
+                    onclick="showSection('accounting')" action="btn-accounting">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Калькулятор -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <rect x="7" y="6" width="10" height="3" fill="currentColor"/>
+                  <circle cx="9" cy="13" r="1.5" fill="currentColor"/>
+                  <circle cx="13" cy="13" r="1.5" fill="currentColor"/>
+                  <circle cx="17" cy="13" r="1.5" fill="currentColor"/>
+                  <circle cx="9" cy="17" r="1.5" fill="currentColor"/>
+                  <circle cx="13" cy="17" r="1.5" fill="currentColor"/>
+                  <circle cx="17" cy="17" r="1.5" fill="currentColor"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Accounting</span>
+            </button>
+
+            <div class="left-menu-sep"></div>
+          </nav>
+
+          <!-- нижний блок кнопок (прибит к низу) -->
+          <nav class="sidenav">
+            <button class="left-menu-item" data-section="statuses" title="statuses"
+                    onclick="showSection('statuses')" action="btn-statuses">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Чек-лист -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                  <path d="M8 8h8M8 12h8M8 16h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Statuses</span>
+            </button>
+
+            <button class="left-menu-item" data-section="statistics" title="statistics"
+                    onclick="showSection('statistics')" action="btn-Statistics">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Диаграмма -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <rect x="6" y="11" width="3" height="8" fill="currentColor"/>
+                  <rect x="11" y="7" width="3" height="12" fill="currentColor"/>
+                  <rect x="16" y="9" width="3" height="10" fill="currentColor"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Statistics</span>
+            </button>
+          </nav>
+          <!-- ячейка: Settings (прибита к низу) -->
+          <nav class="sidenav left-menu-bottom">
+            <button class="left-menu-item" data-section="settings" title="settings"
+                    onclick="alert('Пока не реализовано')" action="btn-settings">
+              <span class="left-menu-icon" aria-hidden="true">
+                <!-- Иконка «шестерёнка» -->
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M19.4 12a7.4 7.4 0 0 0-.1-1l2.1-1.6-2-3.5-2.6 1a7.4 7.4 0 0 0-1.7-1l-.4-2.8h-4l-.4 2.8a7.4 7.4 0 0 0-1.7 1l-2.6-1-2 3.5L4.7 11a7.4 7.4 0 0 0 0 2l-2.1 1.6 2 3.5 2.6-1a7.4 7.4 0 0 0 1.7 1l.4 2.8h4l.4-2.8a7.4 7.4 0 0 0 1.7-1l2.6 1 2-3.5-2.1-1.6c.1-.3.1-.7.1-1Z"
+                        stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="left-menu-text">Settings</span>
+            </button>
+          </nav>
+        </aside>  
+        <!-- Центральная панель -->
+        <main class="layout-center">
+          <div class="logo-center" id="main-logo-block">
+            <img src="assets/jmtglogo.png" class="logo" id="main-logo" alt="Логотип">
+          </div>
+          <div class="page-container">
+            <div id="page-maps" style="display:none;"></div>
+            <div id="page-announcements" style="display:none;">
+              <div id="announcements-filters"></div>
+              <div id="ann-list"></div>
+            </div>
+            <div id="page-transport" style="display:none;"></div>
+            <div id="page-logistics" style="display:none;"></div>
+            <div id="page-accounting" style="display:none;"></div>
+            <div id="page-statuses" style="display:none;">
+              <div id="statuses-filters"></div>
+              <div id="statuses-content"></div>
+            </div>
+            <div id="page-statistics" style="display:none;">
+              <div id="statistics-filters"></div>
+              <div id="statistics-content"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Нижняя панель -->
+      <footer class="layout-footer"></footer>
+    </div>
+  </div>
+
+
+  <script type="module" src="./js/app.js"></script>
+  <!-- Модули -->
+  <script type="module">
+    import { initAnnouncements, showAnnouncementsSection } from './js/pages/announcements/index.js';
+    import { showSection } from './js/core/router.js';
+    import { AuthService } from './js/auth.js';
+    import { WebSocketService } from './js/services/api.js';
+    
+    // ---- Авторизация/регистрация ----
+    const form = document.getElementById('auth-form');
+    const registerFields = document.getElementById('register-fields');
+    const authTitle = document.getElementById('auth-title');
+    const submitBtn = document.getElementById('submit-btn');
+    const showRegisterBtn = document.getElementById('show-register');
+    const getCodeBtn = document.getElementById('get-code');
+    const forgotBtn = document.getElementById('forgot-password');
+    const errorEl = document.getElementById('auth-error');
+    const successEl = document.getElementById('auth-success');
+
+    let isRegisterMode = false;
+    let generatedCode = null;
+
+    showRegisterBtn.onclick = function() {
+      isRegisterMode = !isRegisterMode;
+      registerFields.style.display = isRegisterMode ? 'block' : 'none';
+      authTitle.textContent = isRegisterMode ? 'Регистрация' : 'Вход в JM Trans Group';
+      submitBtn.textContent = isRegisterMode ? 'Зарегистрироваться' : 'Войти';
+      showRegisterBtn.textContent = isRegisterMode ? 'Назад ко входу' : 'Зарегистрироваться';
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+    };
+
+    getCodeBtn.onclick = function() {
+      generatedCode = Math.floor(1000 + Math.random() * 9000);
+      showSuccess('Ваш код подтверждения: ' + generatedCode);
+    };
+
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      errorEl.style.display = 'none';
+      successEl.style.display = 'none';
+
+      if (isRegisterMode) {
+        // --- ВАЛИДАЦИЯ ---
+        const userData = {
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value,
+          password2: document.getElementById('password2').value,
+          name: document.getElementById('name').value.trim(),
+          surname: document.getElementById('surname').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          code: document.getElementById('code').value.trim()
+        };
+        if (!userData.username || !userData.password || !userData.password2 || !userData.code) {
+          showError('Заполните логин, пароль и код подтверждения');
+          return;
+        }
+        if (userData.password !== userData.password2) {
+          showError('Пароли не совпадают');
+          return;
+        }
+        if (!generatedCode || userData.code != generatedCode) {
+          showError('Неверный код подтверждения');
+          return;
+        }
+
+        try {
+          await AuthService.register(userData);
+          showSuccess('Регистрация успешна! Теперь войдите.');
+          showRegisterBtn.click();
+        } catch (err) {
+          showError(err.message || 'Ошибка регистрации');
+        }
+      } else {
+        // ВХОД
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        if (!username || !password) {
+          showError('Введите логин и пароль');
+          return;
+        }
+        try {
+          await AuthService.login(username, password);
+          WebSocketService.connect(); // ОТКРЫВАЕМ WS для PUSH
+          // Скрываем форму логина, показываем main
+          document.getElementById('auth-block').style.display = 'none';
+          document.getElementById('main-section').style.display = '';
+
+          // Получаем заявки с сервера
+          const syncData = await import('./js/services/api.js').then(({ WebSocketService }) =>
+            WebSocketService.sendAndWait({ action: "sync_all" })
+          );
+          if (syncData && syncData.data) {
+            initAnnouncements(syncData.data);
+          }
+
+          showSuccess('Вход успешен!');
+          
+        } catch (err) {
+          showError(err.message || 'Ошибка входа');
+        }
+      }
+    };
+
+    forgotBtn.onclick = function() {
+      alert('Функция восстановления пароля в разработке!');
+    };
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+      successEl.style.display = 'none';
+    }
+    function showSuccess(msg) {
+      successEl.textContent = msg;
+      successEl.style.display = 'block';
+      errorEl.style.display = 'none';
+    }
+
+    // Подсветка активной кнопки mainbar
+    function highlightMainbar(section) {
+      document.querySelectorAll('.mainbar-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      if (section) {
+        const btn = document.getElementById('btn-' + section);
+        if (btn) btn.classList.add('active');
+      }
+    }
+    window.highlightMainbar = highlightMainbar;
+
+    // --- Проверка сессии при загрузке ---
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const token = localStorage.getItem("jm_session_token");
+        if (token) {
+          await AuthService.resumeSession(token);
+          WebSocketService.connect();
+          document.getElementById('auth-block').style.display = 'none';
+          document.getElementById('main-section').style.display = '';
+          // <<< ВОТ ДОБАВЛЯЕМ:
+          const syncData = await WebSocketService.sendAndWait({ action: "sync_all" });
+          if (syncData && syncData.data) {
+            initAnnouncements(syncData.data);
+          }
+        }
+      } catch {
+        document.getElementById('auth-block').style.display = '';
+        document.getElementById('main-section').style.display = 'none';
+      }
+    });
+
+    async function onSearchMaps() {
+      const q = (document.getElementById('search-input')?.value || '').trim();
+      if (q.length < 2) return;
+      // --- локальный кеш результатов по строке запроса ---
+      const KEY = 'geo_cache_v1';
+      const cache = JSON.parse(localStorage.getItem(KEY) || '{}');
+      if (cache[q] && cache[q].lat && cache[q].lon) {
+        postToMap(cache[q], q);
+        return;
+      }
+
+      // --- запрос к твоему /autocomplete_geo ---
+      const url = `${location.protocol}//${location.hostname}:9101/autocomplete_geo?q=${encodeURIComponent(q)}&limit=1`;
+      try {
+        const r = await fetch(url, { cache: 'no-cache' });
+        if (!r.ok) return;
+        const arr = await r.json();
+        if (!arr || !arr.length) return;
+
+        const best = arr[0];
+        const payload = {
+          label: best.label || best.display_name || q,
+          lat: Number(best.lat),
+          lon: Number(best.lon),
+          country_code: (best.country_code || '').toUpperCase(),
+          type: best.type || 'place'
+        };
+        if (!Number.isFinite(payload.lat) || !Number.isFinite(payload.lon)) return;
+
+        // кешируем
+        cache[q] = payload;
+        // ограничим кеш до 200 записей
+        const keys = Object.keys(cache);
+        if (keys.length > 200) delete cache[keys[0]];
+        localStorage.setItem(KEY, JSON.stringify(cache));
+
+        postToMap(payload, q);
+      } catch (e) {
+        // тихо
+      }
+
+      function postToMap(p, qstr) {
+        const frame =
+          document.getElementById('map-iframe') ||
+          document.querySelector('#page-maps iframe, .map-frame-wrap iframe');
+
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage({
+            type: 'map:add_marker',
+            payload: p
+          }, '*');
+        }
+      }
+    }
+
+
+    window.onGlobalSearch = function() {
+      try {
+        if (currentSection === 'announcements') {
+          if (typeof window.onSearchAnnouncements === 'function') {
+            window.onSearchAnnouncements();
+          }
+        } else if (currentSection === 'transport') {
+          if (typeof window.onSearchTransport === 'function') {
+            window.onSearchTransport();
+          }
+        } else if (currentSection === 'logistics') {
+          if (typeof window.onSearchLogistics === 'function') {
+            window.onSearchLogistics();
+          }
+        } else if (currentSection === 'maps') {
+          if (typeof window.onSearchMaps === 'function') {
+            window.onSearchMaps();
+          }
+        }
+      } catch (e) {
+        // молча игнорируем, чтобы не ломать другие страницы
+      }
+    };
+
+
+    function showRegError(msg) {
+      let err = document.getElementById('register-error');
+      err.textContent = msg;
+      err.style.display = 'block';
+    }
+    window.showRegError = showRegError;
+
+    window.searchAllSections = function() {
+      renderRequests();
+    };
+
+    window.logout = function() {
+      AuthService.logout();
+    } 
+    
+    // Универсал: открыть заявку по id (карта вернёт назад)
+    if (!window.openAnnouncementById) {
+      window.openAnnouncementById = function(id) {
+        if (typeof showSection === 'function') showSection('announcements');
+        // пробуем найти кликабельную часть карточки заявки
+        const root = document;
+        const candidates = [
+          `[data-rid="${id}"] [data-action="open"]`,
+          `[data-id="${id}"] [data-action="open"]`,
+          `[data-request-id="${id}"] [data-action="open"]`,
+          `[data-rid="${id}"]`,
+          `[data-id="${id}"]`,
+          `[data-request-id="${id}"]`,
+        ];
+        for (const sel of candidates) {
+          const el = root.querySelector(sel);
+          if (el) { el.dispatchEvent(new MouseEvent('click', {bubbles:true})); return true; }
+        }
+        return false;
+      };
+    }
+
+    // Перехват клика по «компасу» (без знания точного класса/атрибута)
+    document.addEventListener('click', async (e) => {
+      const btn = e.target.closest(`
+        [data-open-route],
+        [data-route],
+        [data-map],
+        [data-action*="route" i],
+        [data-action*="map" i],
+        .btn-route,
+        .btn-map
+      `);
+      if (!btn) return;
+
+      // глушим, чтобы не открылась карточка вместо карты
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Вынимаем id заявки из ближайших data-атрибутов
+      const host = btn.closest('[data-rid],[data-id],[data-request-id]') || btn;
+      const id = Number(
+        host?.dataset?.rid ??
+        host?.dataset?.id ??
+        host?.dataset?.requestId
+      );
+      if (!Number.isFinite(id)) return;
+
+      // Включаем раздел карты и строим маршрут
+      if (typeof showSection === 'function') showSection('maps');
+      await Promise.resolve(); // один тик, чтобы секция отрисовалась
+
+      // Ищем универсальную функцию отрисовки маршрута (карта экспортнёт её)
+      if (typeof window.openRouteOnMapForRequest === 'function') {
+        window.openRouteOnMapForRequest(id); // можно ID — карта сама найдёт объект
+      } else {
+        // fallback: сообщим пользователю
+        console.warn('Маршрут: функция карты не доступна (openRouteOnMapForRequest)');
+      }
+    }, true); // capture=true, чтобы опередить общий click по карточке
+
+    // ——— Безопасный глобальный поиск/фильтр: не падаем, если узкоспец. функции недоступны
+    if (!window.onGlobalSearch) {
+      window.onGlobalSearch = function () {
+        try {
+          const sec = window.currentSection;
+          if (sec === 'announcements' && typeof window.onSearchAnnouncements === 'function') {
+            window.onSearchAnnouncements();
+          } else if (sec === 'maps' && typeof window.onSearchMaps === 'function') {
+            window.onSearchMaps();
+          }
+        } catch (_) {}
+      };
+    }
+
+    // ——— Фильтр «Заявки» по городу через ваше поле #search-input
+    if (!window.filterAnnouncementsByCity) {
+      window.filterAnnouncementsByCity = function (city) {
+        const input = document.getElementById('search-input');
+        if (input) input.value = city || '';
+        if (typeof window.onGlobalSearch === 'function') {
+          window.onGlobalSearch();
+        } else {
+          // запасной план: простое скрытие карточек по тексту (если спец. фильтр недоступен)
+          const list = document.getElementById('ann-list');
+          if (list) {
+            const q = String(city || '').toLowerCase();
+            Array.from(list.children).forEach(el => {
+              const txt = (el.innerText || '').toLowerCase();
+              el.style.display = q ? (txt.includes(q) ? '' : 'none') : '';
+            });
+          }
+        }
+      };
+    }
+
+    // ——— Хелпер: открыть карточку заявки по ID (если нужно вернуться из карты)
+    if (!window.openAnnouncementById) {
+      window.openAnnouncementById = function (id) {
+        // оставляем вашу текущую логику: кликаем по тому, что уже открывает карточку
+        const candidates = [
+          `[data-rid="${id}"] [data-action="open"]`,
+          `[data-id="${id}"] [data-action="open"]`,
+          `[data-request-id="${id}"] [data-action="open"]`,
+          `[data-rid="${id}"]`,
+          `[data-id="${id}"]`,
+          `[data-request-id="${id}"]`,
+        ];
+        for (const sel of candidates) {
+          const el = document.querySelector(sel);
+          if (el) { el.dispatchEvent(new MouseEvent('click', {bubbles:true})); return true; }
+        }
+        return false;
+      };
+    }
+
+    // ——— Перехват «компаса» (работает даже если классы/атрибуты у вас свои)
+    document.addEventListener('click', async (e) => {
+      const btn = e.target.closest(`
+        [data-open-route],
+        [data-open-map],
+        [data-action*="route" i],
+        [data-action*="map" i],
+        .btn-route,
+        .route-btn,
+        .fa-compass,
+        .bi-compass,
+        .icon-compass
+      `);
+      if (!btn) return;
+
+      // не даём карточке перехватить клик
+      e.preventDefault(); e.stopPropagation();
+
+      // берём id из ближайших data-атрибутов карточки
+      const host = btn.closest('[data-request-id],[data-rid],[data-id]') || btn;
+      const id = Number(host?.dataset?.requestId || host?.dataset?.rid || host?.dataset?.id);
+      if (!Number.isFinite(id)) return;
+
+      // на карту
+      if (typeof window.showSection === 'function') window.showSection('maps');
+      await Promise.resolve(); // дождаться отрисовки
+
+      if (typeof window.openRouteOnMapForRequest === 'function') {
+        window.openRouteOnMapForRequest(id);
+      } else {
+        // карта ещё не успела экспортнуть метод — сохраним до её готовности
+        window.__pendingRouteId = id;
+      }
+    }, true); // capture=true — опережаем общий клик по карточке
+
+    // ——— Карту попросим забрать отложенный маршрут, когда инициализируется
+    window.__consumePendingRouteIfAny = function () {
+      if (window.__pendingRouteId && typeof window.openRouteOnMapForRequest === 'function') {
+        const id = window.__pendingRouteId; window.__pendingRouteId = null;
+        window.openRouteOnMapForRequest(id);
+      }
+    };
+
+    // === LEFT MENU COLLAPSE ===
+    (function initLeftMenuCollapse(){
+      const menu  = document.getElementById('MainMenu');
+      const btn   = document.getElementById('leftmenu-toggle');
+      const brand = document.getElementById('brand-mini');
+      if (!menu || !btn || !brand) return;
+
+      const LS_KEY = 'ui:leftmenu:collapsed:v1';
+
+      function showHomeLogo() {
+        // Унифицировано: используем ваш роутер
+        if (typeof window.showSection === 'function') {
+          window.showSection('home'); // уйдёт в default кейс и покажет логотип
+        }
+        // на всякий случай оставим контейнер логотипа видимым
+        const block = document.getElementById('main-logo-block');
+        if (block) block.style.display = '';
+        const img = document.getElementById('main-logo');
+        if (img) img.style.display = '';
+      }
+
+      function apply(collapsed) {
+        const isCollapsed = !!collapsed;
+        menu.classList.toggle('collapsed', isCollapsed);
+        btn.setAttribute('aria-expanded', String(!isCollapsed));
+
+        // переключаем надпись dmTranscribe ↔ JMTG
+        const full  = brand.getAttribute('data-full')  || brand.textContent;
+        const short = brand.getAttribute('data-short') || 'JMTG';
+        brand.textContent = isCollapsed ? short : full;
+
+        // ключевое: сообщаем приложению, что меню свернуто/развернуто
+        const root = document.querySelector('.app-root');
+        if (root) root.classList.toggle('leftmenu-collapsed', isCollapsed);
+      }
+
+
+      // Восстановим предыдущее состояние
+      const saved = localStorage.getItem(LS_KEY) === '1';
+      apply(saved);
+
+      // Кнопка свернуть/развернуть
+      btn.addEventListener('click', () => {
+        const willCollapse = !menu.classList.contains('collapsed');
+        apply(willCollapse);
+        localStorage.setItem(LS_KEY, willCollapse ? '1' : '0');
+      });
+
+      // Клик по бренду — открыть «главное окно» (логотип)
+      brand.style.userSelect = 'none';
+      brand.addEventListener('click', showHomeLogo);
+    })();
+
+
+  </script>
+</body>
+</html>

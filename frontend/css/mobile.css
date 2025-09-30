@@ -1,0 +1,170 @@
+/* frontend/css/mobile.css
+   Мобильные переопределения. Только адаптация, без ломки десктопа. */
+
+@media (max-width: 900px) {
+
+  /* Даем странице и центральной колонке возможность нормально скроллиться на телефоне */
+  html, body {
+    overflow: auto !important;
+    height: auto;
+  }
+  .app-root {
+    padding-left: 0 !important;
+    height: auto;
+  }
+
+  /* Верхняя синяя панель компактнее и гибче */
+  .mainbar {
+    gap: 0.4rem;
+    padding: 0.5rem 0.5rem;
+    flex-wrap: wrap;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto;               /* если кнопок много — скролл по оси X */
+    -webkit-overflow-scrolling: touch;
+  }
+  .mainbar-right {
+    margin-left: auto;
+  }
+
+  /* Поисковая строка на всю ширину строки */
+  .search-wrapper {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  .search-wrapper .search-input {
+    width: 100%;
+  }
+  /* Подсказки поиска не выходят за экран */
+  #autocomplete-list {
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Прячем боковые панели, раскладываем центральную область в колонку */
+  .main-horizontal {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  .layout-side {
+    display: none !important;
+  }
+  .layout-center {
+    width: 100% !important;
+    min-width: 0 !important;
+    overflow: auto !important;      /* раньше было hidden → терялся контент */
+    background: transparent;        /* чтобы не ощущалось "врезанное" поле */
+  }
+
+  /* Контейнеры страниц без жестких ограничений */
+  .page-container,
+  #page-announcements {
+    max-width: 100% !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    box-sizing: border-box;
+  }
+
+  /* Скролл-область для таблиц: немного ниже, чтобы влезала шапка */
+  .scroll-box {
+    max-height: calc(100vh - 220px);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Таблицы статистики/статусов: разрешаем переносы и уменьшаем минимумы */
+  .scroll-box .stats-table th,
+  .scroll-box .stats-table td {
+    white-space: normal !important;   /* чтобы текст не уезжал за экран */
+  }
+
+  /* Колонки — помягче минимальные ширины, чтобы меньше горизонтального скролла */
+  .stats-table .col-direction { min-width: 180px; }
+  .stats-table .col-vehicle   { min-width: 120px; }
+  .stats-table .col-date,
+  .stats-table .col-nick,
+  .stats-table .col-load-date,
+  .stats-table .col-unload-dt { min-width: 120px; }
+  .stats-table .col-today     { min-width: 140px; }
+
+  /* Увеличиваем тач-таргеты в ячейках */
+  .table td input[type="text"],
+  .table td input[type="date"],
+  .table td button {
+    min-height: 36px;
+  }
+
+  /* Кнопки в шапке: компактнее, но читаемо */
+  .mainbar-btn {
+    font-size: clamp(0.72rem, 3.2vw, 0.95rem);
+    height: clamp(1.6rem, 5.2vw, 2.2rem);
+    padding-left: clamp(0.25em, 1.6vw, 0.6em);
+    padding-right: clamp(0.25em, 1.6vw, 0.6em);
+  }
+  .plus-btn, #map-btn, .round-btn {
+    width: clamp(1.2rem, 4.2vw, 1.7rem);
+    height: clamp(1.2rem, 4.2vw, 1.7rem);
+    font-size: clamp(0.6rem, 2.4vw, 1rem);
+  }
+}
+
+/* Чуть ужесточим для совсем узких (типовой 360–400px) */
+@media (max-width: 480px) {
+  .mainbar { gap: 0.35rem; }
+  .search-wrapper { margin-top: 0.2rem; }
+}
+
+/* === Announcements cards — mobile polish === */
+@media (max-width: 900px) {
+
+  /* Список заявок перестаёт быть «внутренним скроллом» на телефонах */
+  #ann-list {
+    max-height: none !important;
+    padding: 0.8rem;
+  }
+
+  /* Карточка: компактные отступы, аккуратные скругления */
+  #ann-list .request-card {
+    padding: 0.9rem 0.8rem;
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  /* Внутренняя сетка карточки — в колонку вместо трёх колонок */
+  .request-sections-row {
+    flex-direction: column !important;
+    gap: 8px;
+  }
+  .request-section-cell {
+    min-height: 0;            /* убираем жёсткую высоту */
+    padding: 0;
+    border-right: 0 !important;
+  }
+  .request-section-cell:not(:last-child) {
+    border-bottom: 1px dashed #e7e7e7;
+    padding-bottom: .5rem;
+  }
+
+  /* Строки информации — меньше расстояния и шрифт адаптивный */
+  .request-card .mini-row,
+  .request-card .request-info-row,
+  .request-card .card-row {
+    gap: 0.65em;
+    font-size: clamp(0.95rem, 3.6vw, 1rem);
+    flex-wrap: wrap;
+  }
+  .request-card > div > b {
+    font-size: clamp(1rem, 4.2vw, 1.05rem);
+  }
+
+  /* Если в разметке есть «визуальные разделители» (двоеточия/точки) — прячем их на мобилке */
+  .request-card [class*="sep"],
+  .request-card [class*="colon"],
+  .request-card [class*="delim"],
+  .request-card .dots {
+    display: none !important;
+  }
+}

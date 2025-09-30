@@ -1,0 +1,527 @@
+:root {
+  --leftmenu-w: 230px;
+  --leftmenu-w-collapsed: 64px;
+  --leftmenu-header-h: 56px; /* высота верхней панели */
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto; /* Вертикальный скролл документу */
+}
+
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f8fafb;
+
+  /* Отступ под фиксированное левое меню */
+  padding-left: var(--leftmenu-w);
+  transition: padding-left .2s ease;
+}
+
+/* Когда меню свернуто — уменьшаем отступ */
+.app-root.leftmenu-collapsed {
+  padding-left: var(--leftmenu-w-collapsed);
+}
+
+
+.mainbar-layout {
+  flex-shrink: 0;
+  background: #0077ff;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 6px 24px #dbeaff77;
+
+  /* ключевое: больше НЕ считаем ничего от viewport, берём 100% от .app-root */
+  width: 100%;
+  min-height: var(--leftmenu-header-h);
+  z-index: 30;
+  position: relative;
+}
+
+/* При сворачивании ничего у .mainbar-layout не меняем — отступом рулит .app-root */
+
+
+/* Внутренности топбара: фиксируем точную высоту 56px
+   (кнопки PLUS/SEARCH/Карта автоматически выровняются по центру) */
+.mainbar {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.4rem, 1vw, 1.2rem);
+
+  height: var(--leftmenu-header-h);
+  padding-top: 0;
+  padding-bottom: 0;
+
+  background: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+}
+
+
+.main-horizontal {
+  display: flex;
+  flex: 1 1 0;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Ð¦ÐµÐ½Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ð°Ñ Ð¿Ð°Ð½ÐµÐ»ÑŒ */
+.layout-center {
+  flex: 1 1 0;
+  background: #bcece7;
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Ð›Ð¾Ð³Ð¾Ñ‚Ð¸Ð¿ */
+.logo-center {
+  width: 100%;
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+.logo-center .logo, .logo {
+  display: block;
+  margin: 0 auto;
+  width: 44vw;
+  min-width: 220px;
+  max-width: 480px;
+}
+
+.layout-footer {
+  flex-shrink: 0;
+  width: 100%;
+  height: 32px;
+  border-top: 2px solid #bbb;
+  background: #fbf9f8;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+/* ...оставь все остальные твои стили для кнопок, карточек и т.д. ... */
+.mainbar::-webkit-scrollbar { height: 8px; }
+.mainbar::-webkit-scrollbar-thumb { background: #a7c9f7; border-radius: 4px; }
+
+.mainbar-btn {
+  flex: 0 0 auto;          /* кнопка не ужимается ниже своего текста */
+  border-radius: 3rem;
+  background: #fff;
+  color: #0077ff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  box-shadow: 0 0.125rem 0.625rem #0090ff33;
+  margin-right: 0.1rem;
+  margin-left: 0;
+  transition: background 0.17s, color 0.17s;
+  cursor: pointer;
+  height: clamp(2.1rem, 5vw, 3rem);
+  font-size: clamp(0.85rem, 2vw, 1.10rem);
+  padding-left: clamp(0.6em, 1vw, 1.1em);
+  padding-right: clamp(0.6em, 1vw, 1.1em);
+  white-space: nowrap;
+}
+
+.plus-btn,
+#map-btn,
+.round-btn {
+  flex-shrink: 0;
+  width: clamp(2rem, 6vw, 3rem);
+  height: clamp(2rem, 6vw, 3rem);
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  border-radius: 50%;
+  font-size: clamp(0.85rem, 3vw, 1.55rem);
+  background: #fff;
+  color: #0077ff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  box-shadow: 0 0.125rem 0.625rem #0090ff33;
+  margin-right: 0.7rem;
+  margin-left: 0;
+  transition: background 0.17s, color 0.17s;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .mainbar-btn {
+    font-size: clamp(0.67rem, 3vw, 0.93rem);
+    height: clamp(1.4rem, 3vw, 2rem);
+    padding-left: clamp(0.15em, 0.8vw, 0.5em);
+    padding-right: clamp(0.15em, 0.8vw, 0.5em);
+  }
+  .plus-btn, #map-btn, .round-btn {
+    width: clamp(1rem, 4vw, 1.6rem);
+    height: clamp(1rem, 4vw, 1.6rem);
+    font-size: clamp(0.55rem, 2vw, 1rem);
+  }
+}
+
+.plus-btn > *,
+#map-btn > *,
+.mainbar-btn > *,
+.round-btn > * {
+  font-size: inherit;
+}
+
+
+
+/* Уменьшить поля поиска для узких экранов */
+.search-wrapper {
+  position: relative;
+  width: clamp(7rem, 15vw, 15rem);
+  max-width: 22vw;
+  min-width: 6rem;
+  margin-right: 0.8rem;
+}
+.search-input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  padding: 0.42em 0.9em;
+  border-radius: 0.5em;
+  border: 1px solid #bbb;
+  background: #fff;
+  transition: border-color 0.18s;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #0077ff;
+  background: #f8fafb;
+}
+
+
+/* Для выпадающих подсказок — будет поверх mainbar, не двигая её */
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 99;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px #0002;
+  border-radius: 0 0 0.5em 0.5em;
+  max-height: 14rem;
+  overflow-y: auto;
+  display: none; /* По умолчанию скрыто */
+}
+.autocomplete-list.active { display: block; }
+
+.page-container {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 10px 42px 10px;
+}
+@media (max-width: 900px) {
+  .main-horizontal { flex-direction: column; }
+  .layout-side { display: none; }
+  .mainbar { width: 99vw; max-width: 99vw; min-width: 0; }
+  .page-container { max-width: 99vw; }
+}
+
+
+
+
+#page-announcements {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 0 24px 0;
+}
+
+#ann-list {
+  max-height: 70vh;
+  max-width: 1100px;
+  min-width: 300px;
+  width: 100%;
+  overflow-y: auto;
+  
+  background: #f8fafb;
+  border-radius: 1.2rem;
+  padding: 1.2rem;
+  box-shadow: 0 4px 28px #e0e5f6cc;
+  margin-top: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .mainbar, #page-announcements, .page-container { max-width: 98vw; min-width: 0; }
+  .logo { max-width: 60vw; }
+}
+@media (max-width: 700px) {
+  .mainbar { flex-wrap: wrap; padding: 0.5rem 0.5rem; }
+  .logo { width: 90vw; }
+}
+.auth-outer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8fafb;
+}
+.auth-logo-wrap {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+.auth-logo {
+  width: 7.5rem; /* 120px */
+  max-width: 80vw;
+  margin-bottom: 0.625rem;
+}
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.auth-card {
+  background: #fff;
+  border-radius: 1.125rem; /* 18px */
+  box-shadow: 0 0.25rem 1.75rem #b0c2e9cc; /* 4px 28px */
+  padding: 2.25rem 2rem 1.75rem 2rem; /* 36px 32px 28px 32px */
+  width: 21.88rem; /* 350px */
+  margin: 0 auto;
+}
+.auth-header {
+  text-align: center;
+  margin-bottom: 0.88rem;
+}
+.auth-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .auth-card { width: 99vw; padding: 8vw 2vw; }
+  .auth-logo { width: 4.38rem; /* 70px */ }
+}
+
+.mini-row {
+  display: inline-flex;
+  gap: 2.2em;
+  font-size: 1rem;
+  margin-bottom: 3px;
+  align-items: baseline;
+}
+
+.card-row {
+  display: flex;
+  gap: 1.3em;
+  margin-bottom: 0.1em; /* очень маленький отступ между строками */
+  font-size: 1rem;
+  align-items: baseline;
+}
+.card-row span {
+  white-space: nowrap;
+}
+.request-card > div > b {
+  font-size: 1.07em;
+  margin-bottom: 0.15em;
+  display: block;
+}
+
+.request-info-row {
+  display: inline-flex;
+  gap: 1.2em;
+  flex-wrap: wrap;
+  align-items: baseline;
+  font-size: 1rem;
+}
+.request-info-row span { white-space: nowrap; }
+
+.request-card .mini-row {
+  display: inline-flex;
+  gap: 1.4em;
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+/* Общая строка секций — фиксированная высота по максимальной колонке */
+.request-sections-row {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Каждая колонка растягивается на всю высоту карточки */
+.request-section-cell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;         /* <--- ГЛАВНОЕ: теперь все три колонки одинаковой ширины */
+  min-width: 0;
+  min-height: 240px;
+  padding: 0 10px;     /* немного внутреннего отступа для красоты */
+  box-sizing: border-box;
+}
+.request-section-cell:not(:last-child) {
+  border-right: 1px solid #e3e3e3;  /* легкий визуальный разделитель */
+}
+
+/* Блок комментариев и блок водителей — скроллируемые */
+.comments-scroll, .drivers-scroll {
+  flex: 1 1 0;
+  overflow-y: auto;
+  max-height: 230px;
+  min-height: 80px;
+  margin-bottom: 6px;
+  padding-right: 4px;
+  background: #f8fafb;
+  border-radius: 7px;
+}
+/* Форма комментария всегда внизу */
+.request-section-cell form {
+  margin-top: auto;
+}
+#status-menu {
+  box-shadow: 0 3px 16px #0003;
+  min-width: 110px;
+  border-radius: 8px;
+  padding: 0.2em 0.3em;
+}
+#status-menu button {
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 5px !important;
+  margin-bottom: 2px;
+  margin-top: 2px;
+  text-align: left;
+}
+.notif-badge {
+  position: absolute;
+  top: 2px; right: 4px;
+  background: #e73333;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 11px;
+  padding: 0 5px;
+  min-width: 17px;
+  text-align: center;
+  z-index: 5;
+  box-shadow: 0 1px 4px #3334;
+  pointer-events: none;
+}
+
+frontend/css/styles.css */
+.flag-emoji-inline { margin-left: 4px; font-size: 0.95em; line-height: 1; }
+
+.icon-btn.map-btn {
+  border: none; background: transparent; cursor: pointer; margin-right: 6px;
+  font-size: 14px; line-height: 1; transform: translateY(-1px);
+}
+.icon-btn.map-btn:hover { filter: drop-shadow(0 1px 1px rgba(0,0,0,.2)); }
+
+/* === Map sizing hardening === */
+#maps-root, #map-root {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 64px); /* если у вас другая высота topbar — скорректируйте */
+  min-height: 420px;
+  overflow: hidden;
+}
+
+#maps-root #map,
+#map-root  #map {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+}
+
+.map-overlay, .backdrop, .loading, .maps-skeleton, #map-skeleton {
+  pointer-events: none; /* перестраховка — если вдруг не сняли оверлей скриптом */
+}
+
+/* Вертикальный скролл для больших таблиц (Статистика, Статусы) */
+.scroll-box {
+  position: relative;                       /* базовый контекст для sticky */
+  max-height: calc(100vh - 240px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;      /* фиксируем ширину при появлении скроллбара */
+}
+
+/* Внутри скролл-контейнера .table-responsive не должен создавать свой overflow */
+.scroll-box .table-responsive {
+  overflow: visible !important;             /* sticky опирается на .scroll-box */
+}
+
+/* Таблица ведёт себя предсказуемо по ширинам колонок */
+.scroll-box .stats-table {
+  table-layout: fixed;                      /* ширины не прыгают */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Неподвижная шапка таблиц внутри скролл-бокса */
+.scroll-box .stats-table thead th {
+  position: sticky;
+  position: -webkit-sticky; /* Safari */
+  top: 0;
+  z-index: 2;
+  background: #f5f6f8;
+  box-shadow: 0 1px 0 #dee2e6, 0 2px 4px rgba(0,0,0,.03);
+}
+
+/* Подрезаем содержимое, чтобы не влияла разная длина текстов в ячейках */
+.scroll-box .stats-table th,
+.scroll-box .stats-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Мягкие фикс-ширины, чтобы сохранялось выравнивание по колонкам (статистика) */
+.scroll-box .stats-table .col-idx       { width: 56px; min-width: 56px; }
+.scroll-box .stats-table .col-direction { width: 34%;  min-width: 240px; }
+.scroll-box .stats-table .col-vehicle   { width: 22%;  min-width: 160px; }
+.scroll-box .stats-table .col-date      { width: 18%;  min-width: 140px; }
+.scroll-box .stats-table .col-nick      { width: 18%;  min-width: 140px; }
+
+/* Мягкие фикс-ширины для статусов — под вашу сетку колонок */
+.scroll-box .stats-table .col-num        { width: 56px;  min-width: 56px; }
+.scroll-box .stats-table .col-plate      { width: 20%;   min-width: 140px; }
+.scroll-box .stats-table .col-load-date  { width: 18%;   min-width: 140px; }
+.scroll-box .stats-table .col-today      { width: 22%;   min-width: 160px; }
+.scroll-box .stats-table .col-unloaded   { width: 14%;   min-width: 120px; }
+.scroll-box .stats-table .col-unload-dt  { width: 18%;   min-width: 140px; }
+
+@media (max-width: 900px) {
+  .left-menu { display: none; }
+  .app-root { padding-left: 0 !important; }
+  .mainbar-layout { width: 100% !important; }
+}
+

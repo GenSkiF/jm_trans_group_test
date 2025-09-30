@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Карта | JM Trans Group</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    html, body, #map { height: 100%; margin: 0; }
+    .pin-popup { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size: 14px; }
+    .pin-popup .title { font-weight: 700; margin-bottom: 6px; }
+    .pin-popup .meta  { opacity: .8; }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  // ✅ двойной клик НЕ отключаем
+  const map = L.map('map', { worldCopyJump: true });
+
+  // Нейтральный старт — целый мир (без забитых координат города)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18, attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  map.fitWorld(); // старт без конкретных координат
+
+  // --- SVG «капля»
+  function svgPin(color='#2b7cff') {
+    const svg = `
+      <svg width="30" height="46" viewBox="0 0 30 46" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".25"/>
+        </filter></defs>
+        <path filter="url(#shadow)" d="M15 45c6.8-10.1 13-17.5 13-26C28 8.2 22.3 2 15 2S2 8.2 2 19c0 8.5 6.2 15.9 13 26z" fill="${color}" stroke="#17324a" stroke-width="1"/>
+        <circle cx="15" cy="18" r="5" fill="white" />
+      </svg>`;
+    return L.divIcon({ className: 'svg-pin', html: svg, iconSize: [30,46], iconAnchor: [15,46], popupAnchor: [0,-40] });
+  }
+
+  // --- Слои
+  const tempLayer  = L.layerGroup().addTo(map); // 2 пина «откуда/куда»
+  const routeLayer = L.layerGroup().addTo(map); // линия маршрута
+  const reqLayer   = L.layerGroup().addTo(map); // массовые метки (актив/приор/текущ)
+
+  function clearTemp(){ tempLayer.clearLayers(); }
+  function clearRoute(){ routeLayer.clearLayers(); }
+
+  function fitTemp() {
+    const layers = tempLayer.getLayers();
+    if (layers.length) {
+      const g = L.featureGroup(layers);
+      map.fitBounds(g.getBounds().pad(0.2));
+    }
+  }
+
+  function placeTempMarker(p){
+    if (!p) return null;
+    const lat = Number(p.lat), lon = Number(p.lon);
+    if (!isFinite(lat) || !isFinite(lon)) return null;
+    const icon = svgPin(String(p.color).toLowerCase() === 'green' ? '#27ae60' : '#2b7cff');
+    const m = L.marker([lat, lon], { icon }).addTo(tempLayer);
+    if (p.label) {
+      m.bindPopup('<div class="pin-popup"><div class="title">'+escapeHtml(p.label)+'</div><div class="meta">'+lat.toFixed(6)+', '+lon.toFixed(6)+'</div></div>');
+    }
+    return { lat, lon, marker: m };
+  }
+
+  function escapeHtml(s){
+    return String(s || '').replace(/[&<>"']/g, ch => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[ch]));
+  }
+
+  // --- Маршрут через OSRM; если упало — прямая линия (fallback)
+  async function drawRoute(from, to){
+    clearRoute();
+    const lat1 = Number(from?.lat), lon1 = Number(from?.lon);
+    const lat2 = Number(to?.lat),   lon2 = Number(to?.lon);
+    if (![lat1,lon1,lat2,lon2].every(isFinite)) return;
+
+    const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+    try {
+      const resp = await fetch(url);
+      if (resp.ok) {
+        const data = await resp.json();
+        const coords = data?.routes?.[0]?.geometry?.coordinates;
+        if (Array.isArray(coords)) {
+          const latlngs = coords.map(([x,y]) => [y,x]);
+          L.polyline(latlngs, { color:'#2b7cff', weight:5, opacity:.9 }).addTo(routeLayer);
+          return;
+        }
+      }
+    } catch(e) {}
+    // fallback — прямая
+    L.polyline([[lat1,lon1],[lat2,lon2]], { color:'#2b7cff', weight:4, opacity:.8, dashArray:'8 6' }).addTo(routeLayer);
+  }
+
+  // --- Массовые метки (актив/приор/текущ)
+  function setRequests(points=[]) {
+    reqLayer.clearLayers();
+    const added = [];
+    for (const p of points) {
+      const lat = Number(p.lat), lon = Number(p.lon);
+      if (!isFinite(lat) || !isFinite(lon)) continue;
+      const icon  = svgPin(p.type === 'from' ? '#27ae60' : '#2b7cff');
+      const m = L.marker([lat,lon], { icon }).addTo(reqLayer);
+      const ttl = (p.title || '') + (p.id ? ' #' + p.id : '');
+      if (ttl) m.bindPopup('<div class="pin-popup"><div class="title">'+escapeHtml(ttl)+'</div><div class="meta">'+lat.toFixed(6)+', '+lon.toFixed(6)+'</div></div>');
+      if (p.id) m.on('click', () => { location.hash = 'showRequestId='+p.id; });
+      added.push(m);
+    }
+    if (added.length) {
+      const g = L.featureGroup(added);
+      map.fitBounds(g.getBounds().pad(0.2));
+    }
+  }
+
+  // --- Канал связи с фронтом
+  window.addEventListener('message', async (ev) => {
+    const d = ev?.data;
+    if (!d || typeof d !== 'object') return;
+
+    if (d.type === 'map:set_requests' && Array.isArray(d.payload)) {
+      setRequests(d.payload);
+      return;
+    }
+
+    if (d.type === 'map:set_from_to' && d.payload) {
+      clearTemp();
+      const { from, to } = d.payload;
+      const a = placeTempMarker({ ...from, color:'green' });
+      const b = placeTempMarker({ ...to,   color:'blue'  });
+      fitTemp();
+      if (a && b) await drawRoute(a, b);
+      return;
+    }
+
+    if (d.type === 'map:clear_temp') { clearTemp(); return; }
+    if (d.type === 'map:fit_temp')   { fitTemp();   return; }
+  });
+})();
+</script>
+</body>
+</html>

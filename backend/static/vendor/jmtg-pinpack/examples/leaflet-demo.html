@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>JMTG Pin Pack — Leaflet Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style> html, body, #map { height: 100%; margin:0; } </style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../dist/jmtg-pins.js"></script>
+<script>
+  const map = L.map('map').setView([41.716, 44.78], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; OpenStreetMap' }).addTo(map);
+
+  // From / To
+  L.marker([41.716, 44.78], { icon: JMTGPins.leaflet.from() }).addTo(map).bindPopup('FROM: Tbilisi');
+  L.marker([40.177, 44.503], { icon: JMTGPins.leaflet.to()   }).addTo(map).bindPopup('TO: Yerevan');
+
+  // Numbered
+  L.marker([42.266, 42.705], { icon: JMTGPins.leaflet.drop({ color: JMTGPins.palette.orange, label: '7' }) }).addTo(map).bindPopup('Order #7');
+
+  // Badge
+  L.marker([41.9, 45.2], { icon: JMTGPins.leaflet.badge({ text: '12', color: JMTGPins.palette.purple }) }).addTo(map).bindPopup('Cluster 12');
+</script>
+</body>
+</html>

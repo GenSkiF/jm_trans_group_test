@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Map - Logistics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .leaflet-popup-content {
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="leaflet/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script>
+        // Эти массивы подставляются из Python!
+        let fromCities = [];
+        let toCities = [];
+
+        let map = L.map('map').setView([41.8, 44.8], 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Кластер-группы
+        let fromMarkers = L.markerClusterGroup();
+        let toMarkers = L.markerClusterGroup();
+
+        // --- Для автоматического смещения маркеров (если несколько по одной координате) ---
+        function getOffsetCoords(lat, lon, index, total, offset = 0.0006) {
+            if (total === 1) return [lat, lon];
+            let angle = (2 * Math.PI * index) / total;
+            let dx = Math.cos(angle) * offset;
+            let dy = Math.sin(angle) * offset;
+            return [lat + dy, lon + dx];
+        }
+
+        function groupByCoords(arr) {
+            let map = {};
+            arr.forEach((city) => {
+                let key = city.lat + "," + city.lon;
+                if (!(key in map)) map[key] = [];
+                map[key].push(city);
+            });
+            return map;
+        }
+
+        // --- Иконки ---
+        const redIcon = L.icon({
+            iconUrl: 'leaflet/marker-icon-red.png',
+            shadowUrl: 'leaflet/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+        const greenIcon = L.icon({
+            iconUrl: 'leaflet/marker-icon-green.png',
+            shadowUrl: 'leaflet/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        // --- Маркеры FROM ---
+        let fromGroups = groupByCoords(fromCities);
+        Object.values(fromGroups).forEach((group) => {
+            group.forEach((city, idx) => {
+                let [lat, lon] = getOffsetCoords(city.lat, city.lon, idx, group.length);
+                let marker = L.marker([lat, lon], { icon: redIcon });
+                marker.bindPopup(
+                    `<b>${city.name}</b><br>Откуда: ${city.from || ''}<br>Куда: ${city.to || ''}<br>Транспорт: ${city.transport || ''}`
+                );
+                marker.on('click', function () {
+                    window.location.hash = 'showRequestId=' + city.id;
+                });
+                fromMarkers.addLayer(marker);
+            });
+        });
+
+        // --- Маркеры TO ---
+        let toGroups = groupByCoords(toCities);
+        Object.values(toGroups).forEach((group) => {
+            group.forEach((city, idx) => {
+                let [lat, lon] = getOffsetCoords(city.lat, city.lon, idx, group.length);
+                let marker = L.marker([lat, lon], { icon: greenIcon });
+                marker.bindPopup(
+                    `<b>${city.name}</b><br>Откуда: ${city.from || ''}<br>Куда: ${city.to || ''}<br>Транспорт: ${city.transport || ''}`
+                );
+                marker.on('click', function () {
+                    window.location.hash = 'showRequestId=' + city.id;
+                });
+                toMarkers.addLayer(marker);
+            });
+        });
+
+        map.addLayer(fromMarkers);
+        map.addLayer(toMarkers);
+
+        function focusOnCoordinates(lat, lon) {
+            if (!map) return;
+            L.marker([lat, lon])
+                .addTo(map)
+                .bindPopup("🔍 Выбранный город")
+                .openPopup();
+            map.flyTo([lat, lon], 10);
+        }
+
+
+    </script>
+</body>
+
+</html>

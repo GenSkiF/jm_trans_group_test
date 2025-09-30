@@ -1,0 +1,37 @@
+/* === Statistics: "Текущие загрузки" таблица === */
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.stats-table thead th {
+  background: #f5f6f8;      /* светлая «Excel»-шапка */
+  font-weight: 600;
+  /* липкость можно и тут продублировать, но глобально уже задано в styles.css */
+  /* position: sticky; top: 0; z-index: 2; */
+}
+.stats-table th,
+.stats-table td {
+  border: 1px solid rgb(150, 152, 153); /* тонкие границы как в Excel */
+  padding: 8px 1px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.stats-table td.col-direction { min-width: 240px; white-space: normal; }
+.stats-table td.col-vehicle   { min-width: 200px; }
+.stats-table td.col-date      { min-width: 140px; text-align: left; }
+
+@media (max-width: 768px) {
+  .stats-table th,
+  .stats-table td { white-space: normal; }
+}
+
+/* Узкая колонка нумерации */
+.stats-table th.col-idx,
+.stats-table td.col-idx {
+  width: 44px;
+  min-width: 44px;
+  text-align: center;
+  white-space: nowrap;
+  padding-left: 6px;
+  padding-right: 6px;
+}
